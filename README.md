@@ -3,11 +3,11 @@ POMM Delivery
 
 This is a small repository for deliverying the POMM software.
 
-There are 3 pieces that need to be deliveryed:
+There are 3 pieces that need to be deliveried:
 
-#. ISIS software
-#. ISIS data
-#. AFIS/POMM software
+1. ISIS software
+2. ISIS data
+3. AFIS/POMM software
 
 There is a top level Makefile that handles installing everything.
 
