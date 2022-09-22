@@ -17,15 +17,16 @@ $(ISISDATA): isis-install-supplement
 
 $(POMMDATA): pomm_data.tar.gz
 	mkdir -p $(PREFIX)
-	tar -xf $< -C $(PREFIX)
+	tar -I pigz -xf $< -C $(PREFIX)
 
 $(AFIDSROOT): afids-conda-package
 	cd $< && $(MAKE) -e install-afids
-	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef
+	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases
+
 # We use pigz to create the data tar file, because otherwise this
 # takes forever
 pomm_data.tar.gz:
-	tar -I pigz $@ ./pomm_data
+	tar -I pigz -cf $@ ./pomm_data
 
 temp: $(AFIDSROOT)
 temp2: $(POMMDATA)

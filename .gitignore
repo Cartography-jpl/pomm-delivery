@@ -10,3 +10,6 @@ create_delta.bundle
 .cache
 .tramp_history
 python/geocal.egg-info
+# Too big to add to the repository
+pomm_data.tar.gz
+pomm_data
