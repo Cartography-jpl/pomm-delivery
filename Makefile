@@ -91,3 +91,15 @@ docker-full-test:
 	cd isis-install-supplement && git clean -f -d -x
 	docker container stop $$(cat docker_run.id)
 	rm docker_run.id
+
+# Additional tests, not in delivery documents but tests Tom runs
+additional_test: additional_test_hirise_map additional_test_hrsc_map additional_test_nac_map
+
+additional_test_hirise_map:
+	source $(AFIDSROOT)/setup_afids_env.sh && cd $(POMMDATA)/additional_testcases/hirise_map && vicarb "../runtop_map pommui_mapproject"
+
+additional_test_hrsc_map:
+	source $(AFIDSROOT)/setup_afids_env.sh && cd $(POMMDATA)/additional_testcases/hrsc_map && vicarb "../runtop_map pommui_mapproject"
+
+additional_test_nac_map:
+	source $(AFIDSROOT)/setup_afids_env.sh && cd $(POMMDATA)/additional_testcases/nac_map && vicarb "../runtop_map raw2map_nac"
