@@ -32,6 +32,9 @@ $(AFIDSROOT): afids-conda-package
 	cd $< && $(MAKE) -e install-afids
 	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases
 	cp $(AFIDSROOT)/afids/pommos/POMM_AFIDS_User_Guide*.pdf $(PREFIX)
+	cd $(AFIDSROOT); ln -s afids/pommos .
+	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.sh
+	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.csh
 
 # We use pigz to create the data tar file, because otherwise this
 # takes forever
