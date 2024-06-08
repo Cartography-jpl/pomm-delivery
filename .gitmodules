@@ -1,6 +1,6 @@
 [submodule "afids-conda-package"]
 	path = afids-conda-package
-	url = git@github.jpl.nasa.gov:Cartography/afids-conda-package.git
+	url = https://github.com/Cartography-jpl/afids-conda-package.git
 [submodule "isis-install-supplement"]
 	path = isis-install-supplement
-	url = git@github.jpl.nasa.gov:Cartography/isis-install-supplement.git
+	url = https://github.com/Cartography-jpl/isis-install-supplement.git
