@@ -24,13 +24,26 @@ $(ISISROOT): isis-install-supplement
 $(ISISDATA): isis-install-supplement
 	cd $< && $(MAKE) -e install-isis-data install-mex-data
 
-$(POMMDATA): pomm_data.tar.gz
+$(POMMDATA):
+	@test -s ./pomm_data.tar.gz || echo "pomm_data.tar.gz is too large to stage on the public github. You can request this file separately - it is publicly available but too large to stage. You only need it to test/work with Mars or Lunar data. If you get a copy, just place in this directory and either reinstall or just tar this yourself 'tar -I pigz $(TAR_ARG) -xf $< -C $(PREFIX)'"
 	mkdir -p $(PREFIX)
-	tar -I pigz $(TAR_ARG) -xf $< -C $(PREFIX)
+	-tar -I pigz $(TAR_ARG) -xf $< -C $(PREFIX)
+
+# We can't use git-lfs in public version without paying, and I don't want to try to figure
+# out how to get JPL to pay for this. So instead, we use conda constructor to make a
+# stand alone installation, and then put this as a resource in our release tag.
+#$(AFIDSROOT): afids-conda-package
+#	cd $< && $(MAKE) -e install-afids
+#	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases
+#	cp $(AFIDSROOT)/afids/pommos/POMM_AFIDS_User_Guide*.pdf $(PREFIX)
+#	cd $(AFIDSROOT); ln -s afids/pommos .
+#	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.sh
+#	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.csh
 
 $(AFIDSROOT): afids-conda-package
-	cd $< && $(MAKE) -e install-afids
-	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases
+	curl -L -o afids-20240415-Linux-x86_64.sh https://github.com/Cartography-jpl/pomm-delivery/releases/download/v1.0/afids-20240415-Linux-x86_64.sh
+	bash afids-20240415-Linux-x86_64.sh -p $(AFIDSROOT) -b
+	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases ISISROOT=$(ISISROOT) ISISDATA=$(ISISDATA)
 	cp $(AFIDSROOT)/afids/pommos/POMM_AFIDS_User_Guide*.pdf $(PREFIX)
 	cd $(AFIDSROOT); ln -s afids/pommos .
 	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.sh
@@ -40,9 +53,6 @@ $(AFIDSROOT): afids-conda-package
 # takes forever
 pomm_data.tar.gz:
 	tar -I pigz -cf $@ ./pomm_data
-
-temp: $(AFIDSROOT)
-temp2: $(POMMDATA)
 
 # Build in docker, to make a clean test of everything.
 # Note that the docker instance actually gets created in afids-conda-package,
