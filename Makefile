@@ -40,7 +40,7 @@ $(POMMDATA):
 #	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.sh
 #	sed "s/ISIS/DONT_SETME/g" -i $(AFIDSROOT)/etc/afids/setup_afids_python.csh
 
-$(AFIDSROOT): afids-conda-package
+$(AFIDSROOT): 
 	curl -L -o afids-20240415-Linux-x86_64.sh https://github.com/Cartography-jpl/pomm-delivery/releases/download/v1.0/afids-20240415-Linux-x86_64.sh
 	bash afids-20240415-Linux-x86_64.sh -p $(AFIDSROOT) -b
 	eval "$$($(AFIDSROOT)/bin/conda shell.bash hook)" && conda activate $(AFIDSROOT) && conda env config vars set AFIDS_PLANET_DEM=$(POMMDATA)/planet_dem AFIDS_PROJDEF=$(POMMDATA)/projdef POMM_TESTCASE=$(POMMDATA)/testcases ISISROOT=$(ISISROOT) ISISDATA=$(ISISDATA)
