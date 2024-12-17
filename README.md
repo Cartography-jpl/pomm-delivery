@@ -1,7 +1,7 @@
 POMM Delivery
 =============
 
-This is a small repository for deliverying the POMM software.
+This is a small repository for deliverying the POMM software. (NPO 52608)
 
 There are 3 pieces that need to be deliveried:
 
